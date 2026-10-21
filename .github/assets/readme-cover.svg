@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 440" role="img" aria-labelledby="title desc">
+  <title id="title">NOCTURNE — Hookah Store MVP</title>
+  <desc id="desc">Dark olive and warm ivory banner with a minimal hookah illustration.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#171b17"/>
+      <stop offset="1" stop-color="#30382d"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#c9b88a" stop-opacity=".84"/>
+      <stop offset="1" stop-color="#78836a" stop-opacity=".58"/>
+    </linearGradient>
+    <pattern id="grain" width="88" height="88" patternUnits="userSpaceOnUse">
+      <circle cx="9" cy="13" r="1" fill="#f1ebda" opacity=".1"/>
+      <circle cx="55" cy="48" r=".8" fill="#f1ebda" opacity=".08"/>
+    </pattern>
+  </defs>
+  <rect width="1400" height="440" rx="26" fill="url(#bg)"/>
+  <rect width="1400" height="440" rx="26" fill="url(#grain)"/>
+  <circle cx="1115" cy="215" r="174" fill="#a9a47b" opacity=".08"/>
+  <path d="M92 82h74M92 82v74M1308 358h-74m74 0v-74" fill="none" stroke="#d8ceb1" stroke-opacity=".36" stroke-width="2"/>
+  <g fill="none" stroke="#ddd4bc" stroke-opacity=".34" stroke-width="1">
+    <path d="M660 78h150M660 362h150"/>
+    <circle cx="735" cy="78" r="3" fill="#cbbd99"/>
+    <circle cx="735" cy="362" r="3" fill="#cbbd99"/>
+  </g>
+  <text x="122" y="154" fill="#c8bd9e" font-family="Arial, sans-serif" font-size="15" letter-spacing="5">CURATED HOOKAH ACCESSORIES</text>
+  <text x="116" y="243" fill="#f0eadb" font-family="Georgia, 'Times New Roman', serif" font-size="76" letter-spacing="9">NOCTURNE</text>
+  <text x="122" y="292" fill="#d0c8b4" font-family="Arial, sans-serif" font-size="22" letter-spacing="1.5">A considered digital storefront</text>
+  <text x="122" y="333" fill="#aeb49e" font-family="Arial, sans-serif" font-size="14" letter-spacing="2">REACT · SUPABASE · ANDROID</text>
+  <g transform="translate(992 55)" stroke="#d5c8a6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M125 62c-20-25 7-35 0-57m28 59c-9-19 14-28 8-47" fill="none" opacity=".6"/>
+    <path d="M83 80h99l-10 27H93z" fill="#a59b78" fill-opacity=".45"/>
+    <path d="M129 108v37m-22 0h45l-3 15h-40z" fill="#c8bc98" fill-opacity=".3"/>
+    <path d="M91 160h62l19 53c8 23-7 48-32 52h-36c-25-4-40-29-32-52z" fill="url(#glass)"/>
+    <path d="M82 197h79M88 229h70" fill="none" opacity=".55"/>
+    <path d="M123 107v45m42-26c55 2 55 54 29 76l-24 18" fill="none" opacity=".7"/>
+    <path d="M107 260v19m27-19v27m-49 0h96" fill="none" opacity=".85"/>
+    <path d="M121 61h45" fill="none"/>
+    <path d="M164 62c20 0 29 9 29 22" fill="none"/>
+    <path d="M88 78h88" fill="none"/>
+  </g>
+  <text x="1190" y="363" fill="#c8bd9e" font-family="Arial, sans-serif" font-size="12" letter-spacing="3">MVP · 2026</text>
+</svg>

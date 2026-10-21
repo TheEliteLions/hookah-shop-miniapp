@@ -1,37 +1,94 @@
-# NOCTURNE — демонстрационный каталог
+<div align="center">
 
-Русскоязычный адаптивный каталог предметов для кальянного ритуала с подключаемыми Supabase Auth, PostgreSQL, RLS и Storage. Корзина работает локально в браузере, а экран checkout только объясняет демонстрационный режим: заказ, платёж, адрес и телефон не создаются и не собираются. Товары и цены — демонстрационные; продажа регулируемых расходников не предусмотрена.
+<img src=".github/assets/readme-cover.svg" alt="NOCTURNE — цифровой каталог кальянных аксессуаров" width="100%" />
 
-## Стек и запуск
+# NOCTURNE · Hookah Store MVP
 
-- React + TypeScript + Vite.
-- Supabase Auth и PostgreSQL, миграции в `supabase/migrations/`.
-- Supabase Storage bucket `product-images` с публичным чтением и admin-only записью.
-- Исходный код опубликован в GitHub; основной GitHub Actions CI и Supabase tests проходят. Сайт развёрнут на Cloudflare Pages и подключён к Supabase.
-- Android Kotlin WebView wrapper и workflow для debug APK.
+**Современный каталог кальянных аксессуаров с авторизацией, админ-панелью и Android-приложением.**
 
-Требуется Node.js 20.19+ или 22.12+ и npm. Скопируйте `.env.example` в `.env.local` и укажите Supabase project URL и publishable key. Пока параметры пусты, приложение открывает UI-заглушку вместо выдуманного локального каталога.
+[Открыть сайт](https://nocturne-hookah-mvp.pages.dev) · [Исходный код](https://github.com/TheEliteLions/hookah-shop-miniapp) · [Сводка проекта](docs/teacher-summary.md)
+
+[![CI](https://github.com/TheEliteLions/hookah-shop-miniapp/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/TheEliteLions/hookah-shop-miniapp/actions/workflows/ci.yml)
+[![Database tests](https://github.com/TheEliteLions/hookah-shop-miniapp/actions/workflows/database-tests.yml/badge.svg?branch=main)](https://github.com/TheEliteLions/hookah-shop-miniapp/actions/workflows/database-tests.yml)
+[![Android APK](https://github.com/TheEliteLions/hookah-shop-miniapp/actions/workflows/android-apk.yml/badge.svg?branch=main)](https://github.com/TheEliteLions/hookah-shop-miniapp/actions/workflows/android-apk.yml)
+
+</div>
+
+## О проекте
+
+NOCTURNE — готовый MVP русскоязычного адаптивного каталога кальянных аксессуаров. В проекте соединены веб-интерфейс, облачная база данных, регистрация пользователей, защищённые инструменты управления товарами и Android-приложение на базе WebView.
+
+**Демо:** [nocturne-hookah-mvp.pages.dev](https://nocturne-hookah-mvp.pages.dev) · **Репозиторий:** [TheEliteLions/hookah-shop-miniapp](https://github.com/TheEliteLions/hookah-shop-miniapp)
+
+## Возможности
+
+- Каталог товаров с поиском, категориями, сортировкой и фотографиями из Supabase Storage.
+- Корзина с количеством товаров и автоматическим расчётом суммы.
+- Регистрация и вход по e-mail и паролю, выход из аккаунта и сохранение пользовательской сессии.
+- Административное управление товарами: создание, редактирование, публикация и загрузка изображений.
+- Разграничение доступа по ролям: администраторские права назначаются отдельно от публичной регистрации.
+- Адаптивный интерфейс для настольных компьютеров и мобильных экранов.
+- Android-приложение с фирменной иконкой и WebView для опубликованного сайта.
+- Демонстрационный сценарий оформления заказа для показа пользовательского пути.
+
+## Технологии
+
+| Область | Инструменты |
+| --- | --- |
+| Frontend | React 19, TypeScript, Vite, CSS |
+| Backend | Supabase Auth, PostgreSQL, Row Level Security, Storage |
+| Android | Kotlin, Android WebView |
+| Качество | ESLint, TypeScript, pgTAP, GitHub Actions |
+| Публикация | Cloudflare Pages, GitHub Actions artifacts |
+
+## Безопасность и тестирование
+
+Доступ к данным каталога контролируется PostgreSQL RLS. Публичным посетителям доступны опубликованные товары, а изменение каталога и запись фотографий ограничены ролью администратора. Администраторская роль не выдаётся через форму регистрации. SQL-набор pgTAP проверяет политики доступа; последний зафиксированный запуск database workflow проверил 23 утверждения.
+
+В frontend используются только публичные параметры Supabase: URL проекта и publishable key. Секреты и пароли базы не нужны браузеру и не должны включаться в клиентскую сборку.
+
+## Запуск локально
+
+Нужны Node.js 20.19+ или 22.12+ и npm.
 
 ```sh
 npm ci
+```
+
+Скопируйте `.env.example` в `.env.local` и заполните локальные параметры:
+
+```dotenv
+VITE_SUPABASE_URL=https://<project-ref>.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=<publishable-key>
+VITE_SITE_URL=http://localhost:5173
+VITE_PUBLIC_SIGNUP_ENABLED=true
+```
+
+Затем запустите приложение:
+
+```sh
 npm run dev
-npm run typecheck
+```
+
+Команды качества и production-сборки:
+
+```sh
 npm run lint
+npm run typecheck
 npm run build
 ```
 
-Подготовка базы: установите/запустите Supabase CLI, выполните `supabase login`, проверьте выбранный проект и его историю миграций, затем сверьте план командой `supabase db push --dry-run --project-ref <project-ref>`. Не применяйте миграции, пока владелец не проверил dry-run. После отдельного подтверждения миграции применяются через `supabase db push`; демонстрационный seed можно запустить через SQL Editor. Подробности и read-only проверки приведены в `docs/deployment.md`.
+Локальные переменные хранятся в `.env.local`, который исключён из Git. Никогда не помещайте в frontend `service_role`, `sb_secret_...`, пароль базы данных или signing key.
 
-## Настройка администратора
+## Публикация и дополнительные материалы
 
-Создайте/подтвердите обычный Auth аккаунт и получите его UUID в Supabase Dashboard → Authentication → Users. После проверки идентификатора выполните шаблон в `docs/admin-bootstrap.md` через доверенный SQL Editor. Обычная регистрация не присваивает роль. `VITE_PUBLIC_SIGNUP_ENABLED=true` показывает ссылку регистрации; production sign-up также управляется настройкой Supabase Auth. Актуальные статус регистрации и ограничения почты описаны ниже.
+- [План развития](ROADMAP.md)
+- [Инструкция по развёртыванию](docs/deployment.md)
+- [Архитектура](docs/architecture.md)
+- [Настройка администратора](docs/admin-bootstrap.md)
+- [Уведомление о конфиденциальности](https://nocturne-hookah-mvp.pages.dev/privacy.html)
+- [Сводка для преподавателя](docs/teacher-summary.md)
 
-## Безопасность и объём
+GitHub Actions автоматически проверяет frontend, SQL-доступ и собирает Android debug APK. Артефакт APK доступен в успешных запусках [Android workflow](https://github.com/TheEliteLions/hookah-shop-miniapp/actions/workflows/android-apk.yml).
 
-Клиенту разрешены только project URL и publishable/anon key. Никогда не добавляйте `service_role`, database password или signing key в `.env`, frontend bundle, Android APK либо Git. PostgreSQL RLS защищает draft visibility и writes; один лишь маршрут админки не является защитой. Изображения ограничены JPG/PNG/WebP и 5 MiB.
-
-Реальные заказы, платежи, доставка, адреса, телефоны, табак, никотин, вейпы и иные регулируемые расходники не входят в MVP. До реальных продаж проверьте рынок, требования Польши/ЕС, privacy, возрастные ограничения и правила торговли с профильными специалистами. См. `docs/legal-review.md`.
-
-## Текущий статус
-
-Исходный код опубликован в [GitHub](https://github.com/TheEliteLions/hookah-shop-miniapp); CI, Supabase database tests и Android APK workflow прошли для коммита `c324430`. APK с иконкой кальяна доступен в разделе Artifacts успешного [Android workflow](https://github.com/TheEliteLions/hookah-shop-miniapp/actions/runs/39597086033); установка на устройство ещё не проверена. Сайт опубликован на [Cloudflare Pages](https://nocturne-hookah-mvp.pages.dev). В Supabase применена миграция `202610210001_catalog_security.sql`, 10 demo-записей и тестовая карточка владельца; всего 11 опубликованных товаров, один с фото. RLS/Storage policies прошли pgTAP (23 assertions). Владелец подтвердил аккаунт администратора и проверил добавление товара с фото. Публичная регистрация включена; подтверждение e-mail отключено (auto-confirm), поскольку custom SMTP не настроен. Для надёжного восстановления пароля и подтверждающих писем настройте SMTP. Уведомление `/privacy.html` опубликовано; его правовое основание, сроки хранения и условия поставщиков владелец должен проверить с профильным специалистом. Checkout остаётся демонстрационным. Production Pages развёрнут прямой загрузкой Wrangler; Git-интеграция/автодеплой и SMTP не настроены. См. `ROADMAP.md` и `docs/deployment.md`.
+Корзина и checkout предназначены для демонстрации MVP-сценария; приложение не принимает оплату и не создаёт реальные заказы.
