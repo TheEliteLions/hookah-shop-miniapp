@@ -20,8 +20,8 @@
 - [x] Применить проверенную миграцию и безопасный seed к пустому Supabase-проекту; проверка подтвердила 10 опубликованных демонстрационных товаров.
 - [x] Начальный read-only preflight подтвердил целевой ref `aehleysdsmgqjseghgmn` / `Project_hookah-shop` и пустую базу до миграции.
 - [x] Выполнить `supabase db push --dry-run --linked`: показана только `202610210001_catalog_security.sql`; никаких удалённых изменений не выполнялось.
-- [x] Настроить Supabase Auth Site URL и redirect allowlist на production/local origin; оставить email confirmation и выключить signup до privacy review.
-- [ ] Владелец создаёт собственный Auth account, затем назначает его admin по `docs/admin-bootstrap.md`; не выдавать admin публичной регистрации.
+- [x] Настроить Supabase Auth Site URL и redirect allowlist; включить signup по запросу владельца после публикации privacy notice. Email confirmation оставлено выключенным до настройки SMTP.
+- [x] Владелец подтвердил свой Auth account, админ-доступ и добавление опубликованного товара с фотографией; публичная регистрация не назначает роль.
 - [x] Опубликовать исходный код в целевом GitHub repository; основной CI на `main` прошёл для коммита `7473bdf`.
 - [x] Опубликовать Cloudflare Pages production site и проверить Supabase catalog loading: https://nocturne-hookah-mvp.pages.dev.
 - [ ] Настроить Cloudflare Git integration или GitHub Actions secrets для дальнейшего автодеплоя; текущий deployment загружен прямым Wrangler CLI.
@@ -39,7 +39,7 @@
 - Browser preview — checked desktop and 390 px mobile width; no horizontal overflow; no browser console errors.
 - SQL pgTAP — GitHub database workflow passed all 23 assertions for `f5ff9ea`. Previous failures exposed the nested data-modifying CTE, nonexistent `has_policy()`, Storage's guard against direct SQL DELETE, and the 24-versus-23 test-plan mismatch; each was corrected. Local Docker is unavailable.
 - Android APK — not built locally: Gradle command/wrapper is unavailable and local Android Studio runtime is JDK 25; the configured CI pins a compatible Java 17/Gradle 8.13 toolchain.
-- GitHub CI, Supabase database tests, and Android APK workflow passed for commit `4de3197`. Supabase CLI 2.121.0 is authenticated. Migration `202610210001` and the 10-row demo seed are applied to the confirmed project; Auth Site URL/redirects are configured and global signup is disabled.
+- GitHub CI, Supabase database tests, and Android APK workflow passed for commits `4de3197` and `c324430`. Supabase CLI 2.121.0 is authenticated. Migration `202610210001` and seed are applied; owner has added an 11th test item with one image to the confirmed project; Auth Site URL/redirects are configured and global signup is enabled; email confirmation is currently disabled pending custom SMTP.
 - Cloudflare Pages is live at `https://nocturne-hookah-mvp.pages.dev`; deployment was a direct Wrangler upload, not Git-integrated. No custom SMTP is configured; default email delivery limits may prevent reliable confirmations/resets.
 - Android debug APK artifact was uploaded successfully by workflow run `39591634637`; install and device-level WebView verification remain pending.
 
@@ -47,7 +47,7 @@
 
 - Каталог работает с PostgreSQL; anon видит только опубликованные товары.
 - Только админ может выполнять CRUD товара и Storage write; обычный пользователь не может выдать себе роль.
-- Auth reset и email confirmation проверены на фактической конфигурации Supabase.
+- Auth login/admin role and owner-added product/photo verified. Signup is enabled with email auto-confirm; reset emails for non-team addresses require custom SMTP. Privacy notice is published; the owner still needs to verify its legal basis, retention periods and vendor terms.
 - Demo cart/checkout не сохраняют заказ и не запрашивают платёжные/доставочные данные.
 - Lint, typecheck, production build и SQL tests имеют записанные фактические результаты.
 - Публичный HTTPS сайт и APK artifact доступны и проверены либо конкретный внешний блокер указан.
