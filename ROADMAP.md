@@ -16,7 +16,7 @@
 - [x] Установить зависимости; typecheck, lint и production build завершились успешно.
 - [ ] Выполнить SQL tests в локальном Supabase/Docker. Supabase CLI 2.121.0 доступен через `npx`, но Docker отсутствует; GitHub database workflow завершился ошибкой.
 - [x] Добавить pgTAP доступ-тесты и GitHub Actions database workflow.
-- [ ] Исправить первый запуск GitHub database workflow: шаг `supabase test db` завершился ошибкой для коммита `7473bdf`; для изучения подробных логов требуются права администратора репозитория. SQL assertions не подтверждены.
+- [ ] Подтвердить pgTAP исправление повторным GitHub workflow. Причина сбоя `supabase test db` установлена: data-modifying CTE была вложена в аргумент `is()`, PostgreSQL требует такой CTE на верхнем уровне. Проверка исправления ещё ожидает CI; SQL assertions не подтверждены.
 - [ ] Применить миграции/seed к реальному или локальному Supabase и выполнить SQL access tests.
 - [x] Read-only preflight Supabase: ref `aehleysdsmgqjseghgmn` совпадает с проектом аккаунта `Project_hookah-shop`; remote migration history и таблицы `public` пусты, политики `public`/`storage` и Storage buckets отсутствуют.
 - [x] Выполнить `supabase db push --dry-run --linked`: показана только `202610210001_catalog_security.sql`; никаких удалённых изменений не выполнялось.
@@ -35,7 +35,7 @@
 - `npm run lint` — passed.
 - `npm run build` — passed (Vite production bundle).
 - Browser preview — checked desktop and 390 px mobile width; no horizontal overflow; no browser console errors.
-- SQL pgTAP — GitHub database workflow failed at `supabase test db` for commit `7473bdf`; detailed logs require repository admin access. Not run locally because Docker is unavailable. No pass is claimed.
+- SQL pgTAP — GitHub database workflow failed at `supabase test db` for commits `7473bdf`, `0e895f3`, and `24e66d1`. The failure was caused by a data-modifying CTE nested inside `is()`; the test has been corrected and awaits a new workflow result. Not run locally because Docker is unavailable. No pass is claimed.
 - Android APK — not built locally: Gradle command/wrapper is unavailable and local Android Studio runtime is JDK 25; the configured CI pins a compatible Java 17/Gradle 8.13 toolchain.
 - GitHub CI — passed for `7473bdf` and documentation commit `0e895f3`; Supabase database tests — failed for both commits. Supabase CLI 2.121.0 is authenticated. Read-only preflight found an empty app schema and a dry-run with one pending migration; the migration was not applied.
 - Supabase database and Cloudflare production deployment — not configured or deployed.

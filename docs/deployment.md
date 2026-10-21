@@ -10,7 +10,7 @@
 6. В Dashboard Auth → Sign In / Providers отключите `Allow new users to sign up` в production до privacy review. UI toggle сам по себе не защищает публичный Auth endpoint; серверная настройка Supabase является обязательной. Для локальной разработки можно временно включить регистрацию. В Auth настройте Site URL на фактический HTTPS Pages URL и allowlist для него и локального `http://localhost:5173`. Оставьте email confirmation включённым и настройте почтовую доставку. Redirect для recovery также должен попадать на `VITE_SITE_URL`.
 7. Положите URL проекта и publishable key в `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`; никогда не добавляйте `service_role`.
 8. Назначьте владельца админом по `docs/admin-bootstrap.md`. Проверьте доступы через тесты и реальный второй обычный аккаунт.
-9. Локально запускайте SQL тесты командами `supabase db start` и `supabase test db`. GitHub workflow повторяет эти шаги на push/PR. До публикации этой инструкции workflow для commit `7473bdf` завершился ошибкой на `supabase test db`; результат pgTAP не подтверждён. Для разбора лога нужен GitHub-доступ с правами администратора репозитория.
+9. Локально запускайте SQL тесты командами `supabase db start` и `supabase test db`. GitHub workflow повторяет эти шаги на push/PR. Workflow для `7473bdf`, `0e895f3` и `24e66d1` завершились ошибкой на pgTAP. Логи последнего запуска показали data-modifying CTE внутри аргумента `is()` (PostgreSQL допускает её только на верхнем уровне); тест исправлен на отдельные вызовы операции и проверки состояния строки. Дождитесь успешного повторного workflow, прежде чем считать SQL tests пройденными.
 
 ### Read-only preflight 2026-10-21
 

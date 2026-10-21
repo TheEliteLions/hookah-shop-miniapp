@@ -1,5 +1,5 @@
 begin;
-select plan(22);
+select plan(24);
 insert into auth.users (id,aud,role,email,encrypted_password,email_confirmed_at,created_at,updated_at)
 values ('10000000-0000-4000-8000-000000000001','authenticated','authenticated','mvp-test-user@example.invalid','x',now(),now(),now()),
        ('10000000-0000-4000-8000-000000000002','authenticated','authenticated','mvp-test-admin@example.invalid','x',now(),now(),now())
@@ -20,8 +20,10 @@ select is((select public.is_admin()),false,'ordinary account is not admin');
 select is((select count(*)::int from public.admin_users),0,'ordinary account cannot read other admin roles');
 select throws_ok($$insert into public.products(slug,name,category,price) values('user-write','x','Кальяны',1)$$, '42501', null, 'ordinary account cannot insert product');
 select throws_ok($$insert into public.admin_users(user_id) values ('10000000-0000-4000-8000-000000000001')$$, '42501', null, 'ordinary account cannot grant itself admin');
-select is((with changed as (update public.products set is_published=false where slug='test-published' returning 1) select count(*)::int from changed),0,'ordinary account cannot update product');
-select is((with removed as (delete from public.products where slug='test-published' returning 1) select count(*)::int from removed),0,'ordinary account cannot delete product');
+select lives_ok($$update public.products set is_published=false where slug='test-published'$$,'ordinary update attempt completes without changing a visible row');
+select is((select is_published from public.products where slug='test-published'),true,'ordinary account cannot update product');
+select lives_ok($$delete from public.products where slug='test-published'$$,'ordinary delete attempt completes without changing a visible row');
+select is((select count(*)::int from public.products where slug='test-published'),1,'ordinary account cannot delete product');
 select throws_ok($$insert into storage.objects(bucket_id,name) values('product-images','test/user.webp')$$, '42501', null, 'ordinary account cannot upload product image');
 reset role;
 set local role authenticated;
