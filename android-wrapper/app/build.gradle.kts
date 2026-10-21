@@ -16,5 +16,10 @@ android {
         buildConfigField("String", "WEB_APP_URL", "\"$webAppUrl\"")
         buildConfigField("String", "WEB_APP_HOST", "\"${parsedUrl.host}\"")
     }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
     buildFeatures { buildConfig = true }
 }
+kotlinOptions { jvmTarget = "17" }
