@@ -1,5 +1,5 @@
 begin;
-select plan(24);
+select plan(23);
 insert into auth.users (id,aud,role,email,encrypted_password,email_confirmed_at,created_at,updated_at)
 values ('10000000-0000-4000-8000-000000000001','authenticated','authenticated','mvp-test-user@example.invalid','x',now(),now(),now()),
        ('10000000-0000-4000-8000-000000000002','authenticated','authenticated','mvp-test-admin@example.invalid','x',now(),now(),now())

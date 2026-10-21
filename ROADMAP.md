@@ -16,7 +16,7 @@
 - [x] Установить зависимости; typecheck, lint и production build завершились успешно.
 - [ ] Выполнить SQL tests в локальном Supabase/Docker. Supabase CLI 2.121.0 доступен через `npx`, но Docker отсутствует; GitHub database workflow завершился ошибкой.
 - [x] Добавить pgTAP доступ-тесты и GitHub Actions database workflow.
-- [ ] Подтвердить pgTAP исправление повторным GitHub workflow. Логи показали три проблемы: вложенный data-modifying CTE в `is()`, отсутствующую функцию `has_policy()` и защиту Storage от прямого SQL DELETE. Тест изменён на проверку результатов и catalog policies; повторный CI ещё должен подтвердить его.
+- [ ] Подтвердить pgTAP исправление повторным GitHub workflow. Логи показали вложенный data-modifying CTE в `is()`, отсутствующую функцию `has_policy()`, защиту Storage от прямого SQL DELETE и расхождение плана (24 объявлено, 23 фактически). Тест изменён на проверку результатов и catalog policies, план установлен в 23; новый workflow ещё должен подтвердить его.
 - [ ] Применить миграции/seed к реальному или локальному Supabase и выполнить SQL access tests.
 - [x] Read-only preflight Supabase: ref `aehleysdsmgqjseghgmn` совпадает с проектом аккаунта `Project_hookah-shop`; remote migration history и таблицы `public` пусты, политики `public`/`storage` и Storage buckets отсутствуют.
 - [x] Выполнить `supabase db push --dry-run --linked`: показана только `202610210001_catalog_security.sql`; никаких удалённых изменений не выполнялось.
@@ -35,7 +35,7 @@
 - `npm run lint` — passed.
 - `npm run build` — passed (Vite production bundle).
 - Browser preview — checked desktop and 390 px mobile width; no horizontal overflow; no browser console errors.
-- SQL pgTAP — GitHub database workflow failed at `supabase test db` for commits `7473bdf`, `0e895f3`, `24e66d1`, and `d02e3e8`. Logs identified a nested data-modifying CTE, nonexistent `has_policy()`, and Storage's guard against direct SQL DELETE. Assertions were rewritten and await another workflow result. Not run locally because Docker is unavailable. No pass is claimed.
+- SQL pgTAP — GitHub database workflow failed at `supabase test db` for commits `7473bdf`, `0e895f3`, `24e66d1`, `d02e3e8`, and `760eb7a`. Logs identified a nested data-modifying CTE, nonexistent `has_policy()`, Storage's guard against direct SQL DELETE, and a 24-versus-23 test-plan mismatch. Assertions and plan were corrected and await another workflow result. Not run locally because Docker is unavailable. No pass is claimed.
 - Android APK — not built locally: Gradle command/wrapper is unavailable and local Android Studio runtime is JDK 25; the configured CI pins a compatible Java 17/Gradle 8.13 toolchain.
 - GitHub CI — passed for `7473bdf` and documentation commit `0e895f3`; Supabase database tests — failed for both commits. Supabase CLI 2.121.0 is authenticated. Read-only preflight found an empty app schema and a dry-run with one pending migration; the migration was not applied.
 - Supabase database and Cloudflare production deployment — not configured or deployed.
