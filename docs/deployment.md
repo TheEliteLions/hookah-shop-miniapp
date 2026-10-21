@@ -2,14 +2,15 @@
 
 ## Supabase
 
-1. Создайте проект, сохраните database password в менеджере секретов и не передавайте её frontend.
-2. Установите CLI и залогиньтесь; привяжите этот каталог к project ref.
-3. Примените `supabase/migrations/202610210001_catalog_security.sql` через `supabase db push`.
-4. Локально `supabase db start` применяет миграцию и `supabase/seed.sql`; seed не обновляет уже существующие товары. Для production запускайте seed только один раз через SQL Editor.
-5. В Dashboard Auth → Sign In / Providers отключите `Allow new users to sign up` в production до privacy review. UI toggle сам по себе не защищает публичный Auth endpoint; серверная настройка Supabase является обязательной. Для локальной разработки можно временно включить регистрацию. В Auth настройте Site URL на фактический HTTPS Pages URL и allowlist для него и локального `http://localhost:5173`. Оставьте email confirmation включённым и настройте почтовую доставку. Redirect для recovery также должен попадать на `VITE_SITE_URL`.
-6. Положите URL проекта и publishable key в `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`; никогда не добавляйте `service_role`.
-7. Назначьте владельца админом по `docs/admin-bootstrap.md`. Проверьте доступы через тесты и реальный второй обычный аккаунт.
-8. Локально запускайте SQL тесты командами `supabase db start` и `supabase test db`; GitHub workflow повторяет эти шаги на push/PR.
+1. В Supabase Dashboard убедитесь, что выбран целевой проект, и сверяйте его project ref с URL/настройками приложения. Сохраните database password в менеджере секретов; не передавайте её frontend.
+2. Установите CLI и выполните `supabase login`. Свяжите локальную папку с проверенным ref командой `supabase link --project-ref <project-ref>`; эта команда записывает локальную привязку.
+3. Перед изменениями выполните read-only проверки: `supabase migration list --linked` и запросы `SELECT` к `information_schema.tables`, `information_schema.columns` и `supabase_migrations.schema_migrations` через `supabase db query --linked`. Проверьте, что project ref/URL и имя проекта совпадают с выбранным проектом в Dashboard.
+4. Просмотрите все SQL-файлы в `supabase/migrations/`, затем подготовьте план: `supabase db push --dry-run --linked`. Сверьте перечисленные миграции и историю с ожидаемым состоянием. Dry-run ничего не применяет; для `db push` требуется авторизация и database password.
+5. Применяйте миграции через `supabase db push` только после отдельной проверки dry-run и явного подтверждения владельца. Локально `supabase db start` применяет миграцию и `supabase/seed.sql`; seed использует `ON CONFLICT DO NOTHING` и не обновляет/не удаляет существующие товары. Для production запускайте seed только после проверки схемы и отдельного разрешения владельца.
+6. В Dashboard Auth → Sign In / Providers отключите `Allow new users to sign up` в production до privacy review. UI toggle сам по себе не защищает публичный Auth endpoint; серверная настройка Supabase является обязательной. Для локальной разработки можно временно включить регистрацию. В Auth настройте Site URL на фактический HTTPS Pages URL и allowlist для него и локального `http://localhost:5173`. Оставьте email confirmation включённым и настройте почтовую доставку. Redirect для recovery также должен попадать на `VITE_SITE_URL`.
+7. Положите URL проекта и publishable key в `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`; никогда не добавляйте `service_role`.
+8. Назначьте владельца админом по `docs/admin-bootstrap.md`. Проверьте доступы через тесты и реальный второй обычный аккаунт.
+9. Локально запускайте SQL тесты командами `supabase db start` и `supabase test db`. GitHub workflow повторяет эти шаги на push/PR. До публикации этой инструкции workflow для commit `7473bdf` завершился ошибкой на `supabase test db`; результат pgTAP не подтверждён. Для разбора лога нужен GitHub-доступ с правами администратора репозитория.
 
 ## Cloudflare Pages
 

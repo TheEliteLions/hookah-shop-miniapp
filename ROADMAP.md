@@ -14,11 +14,12 @@
 ## Требует выполнения/проверки
 
 - [x] Установить зависимости; typecheck, lint и production build завершились успешно.
-- [ ] Выполнить SQL tests в локальном Supabase/Docker. Blocker: Supabase CLI and Docker are unavailable in this environment; the GitHub database job is configured.
-- [x] Добавить pgTAP доступ-тесты и GitHub Actions database workflow; фактический запуск ждёт Docker/Supabase CLI.
+- [ ] Выполнить SQL tests в локальном Supabase/Docker. Supabase CLI 2.121.0 доступен через `npx`, но Docker отсутствует; GitHub database workflow завершился ошибкой.
+- [x] Добавить pgTAP доступ-тесты и GitHub Actions database workflow.
+- [ ] Исправить первый запуск GitHub database workflow: шаг `supabase test db` завершился ошибкой для коммита `7473bdf`; для изучения подробных логов требуются права администратора репозитория. SQL assertions не подтверждены.
 - [ ] Применить миграции/seed к реальному или локальному Supabase и выполнить SQL access tests.
 - [ ] Проверить реальные Auth redirect/confirmation настройки и назначить владельцем первого admin UUID.
-- [ ] Подключить целевой публичный GitHub repository и сохранить историю коммитов/CI.
+- [x] Опубликовать исходный код в целевом GitHub repository; основной CI на `main` прошёл для коммита `7473bdf`.
 - [ ] Создать Cloudflare Pages deployment, проверить HTTPS URL и production env.
 - [ ] Передать production URL в `WEB_APP_URL`, собрать и скачать APK artifact.
 - [x] Проверить desktop и mobile layout в локальном браузере; горизонтального overflow нет.
@@ -27,14 +28,15 @@
 
 ## Проверочный журнал
 
-- `pnpm install --frozen-lockfile` — passed.
-- `pnpm run typecheck` — passed.
-- `pnpm run lint` — passed.
-- `pnpm run build` — passed (Vite production bundle).
+- `npm ci` — passed (184 packages audited; 0 vulnerabilities).
+- `npm run typecheck` — passed.
+- `npm run lint` — passed.
+- `npm run build` — passed (Vite production bundle).
 - Browser preview — checked desktop and 390 px mobile width; no horizontal overflow; no browser console errors.
-- SQL pgTAP — not run locally: Supabase CLI and Docker are not installed/available.
+- SQL pgTAP — GitHub database workflow failed at `supabase test db` for commit `7473bdf`; detailed logs require repository admin access. Not run locally because Docker is unavailable. No pass is claimed.
 - Android APK — not built locally: Gradle command/wrapper is unavailable and local Android Studio runtime is JDK 25; the configured CI pins a compatible Java 17/Gradle 8.13 toolchain.
-- Remote deployment/CI — not run: no target GitHub repository or cloud credentials were provided.
+- GitHub CI — passed for `7473bdf`; Supabase database tests — failed for that commit. Supabase CLI 2.121.0 is available through `npx` but not authenticated; no remote schema was queried or changed.
+- Supabase database and Cloudflare production deployment — not configured or deployed.
 
 ## Критерии приёмки
 

@@ -7,7 +7,7 @@
 - React + TypeScript + Vite.
 - Supabase Auth и PostgreSQL, миграции в `supabase/migrations/`.
 - Supabase Storage bucket `product-images` с публичным чтением и admin-only записью.
-- Cloudflare Pages и GitHub Actions подготовлены, но ещё не подключены к аккаунтам.
+- Исходный код опубликован в GitHub; основной GitHub Actions CI проходит. Cloudflare Pages и облачная база пока не настроены.
 - Android Kotlin WebView wrapper и workflow для debug APK.
 
 Требуется Node.js 20.19+ или 22.12+ и npm. Скопируйте `.env.example` в `.env.local` и укажите Supabase project URL и publishable key. Пока параметры пусты, приложение открывает UI-заглушку вместо выдуманного локального каталога.
@@ -20,7 +20,7 @@ npm run lint
 npm run build
 ```
 
-Развёртывание базы: установите Supabase CLI, выполните `supabase login`, `supabase link --project-ref <project-ref>`, затем `supabase db push`. Для первоначальных демо-товаров выполните `supabase/seed.sql` через SQL Editor или `supabase db execute --file supabase/seed.sql`. Настройки проекта и проверка Auth описаны в `docs/deployment.md`.
+Подготовка базы: установите/запустите Supabase CLI, выполните `supabase login`, проверьте выбранный проект и его историю миграций, затем сверьте план командой `supabase db push --dry-run --project-ref <project-ref>`. Не применяйте миграции, пока владелец не проверил dry-run. После отдельного подтверждения миграции применяются через `supabase db push`; демонстрационный seed можно запустить через SQL Editor. Подробности и read-only проверки приведены в `docs/deployment.md`.
 
 ## Настройка администратора
 
@@ -34,4 +34,4 @@ npm run build
 
 ## Текущий статус
 
-npm ci, lint, typecheck и production build проходят. pgTAP не запускался: в локальной среде нет Docker. Supabase CLI 2.121.0 доступен через npx, но dry-run ждёт авторизации; удалённая схема не изменялась. Git remote задан для пустого репозитория, но коммиты и push ждут Git author identity и GitHub write authentication. Cloudflare Pages и Android APK ещё не опубликованы. См. `ROADMAP.md` для статуса.
+Исходный код опубликован в [GitHub](https://github.com/TheEliteLions/hookah-shop-miniapp); основной CI на `main` прошёл. Облачная база Supabase и Cloudflare Pages ещё не настроены. Первый запуск workflow Supabase database tests завершился ошибкой на шаге pgTAP; фактические assertions не подтверждены, а журналы недоступны текущему GitHub-доступу. Локально Docker отсутствует. Supabase CLI 2.121.0 доступен через `npx`, но CLI не авторизован, поэтому dry-run и read-only запросы к схеме не выполнены. Удалённая база не изменялась. Cloudflare Pages и Android APK ещё не опубликованы. См. `ROADMAP.md` для статуса.
