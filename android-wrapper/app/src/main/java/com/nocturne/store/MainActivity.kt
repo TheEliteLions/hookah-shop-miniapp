@@ -36,6 +36,8 @@ class MainActivity : android.app.Activity() {
             addView(TextView(this@MainActivity).apply { text = "NOCTURNE временно недоступен. Проверьте подключение к интернету." })
             addView(Button(this@MainActivity).apply { text = "Повторить"; setOnClickListener { offline.visibility = View.GONE; webView.reload() } })
         }
+        val loadIndicator = progress
+        val offlinePanel = offline
         webView = WebView(this).apply {
             settings.javaScriptEnabled = true
             settings.domStorageEnabled = true
@@ -68,10 +70,10 @@ class MainActivity : android.app.Activity() {
                     }
                     return true
                 }
-                override fun onPageStarted(view: WebView, url: String, favicon: android.graphics.Bitmap?) { progress.setVisibility(View.VISIBLE); offline.setVisibility(View.GONE) }
-                override fun onPageFinished(view: WebView, url: String) { progress.setVisibility(View.GONE); offline.setVisibility(View.GONE) }
+                override fun onPageStarted(view: WebView, url: String, favicon: android.graphics.Bitmap?) { loadIndicator.visibility = View.VISIBLE; offlinePanel.visibility = View.GONE }
+                override fun onPageFinished(view: WebView, url: String) { loadIndicator.visibility = View.GONE; offlinePanel.visibility = View.GONE }
                 override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
-                    if (request.isForMainFrame) { progress.setVisibility(View.GONE); offline.setVisibility(View.VISIBLE) }
+                    if (request.isForMainFrame) { loadIndicator.visibility = View.GONE; offlinePanel.visibility = View.VISIBLE }
                 }
             }
             loadUrl(BuildConfig.WEB_APP_URL)
