@@ -68,10 +68,10 @@ class MainActivity : android.app.Activity() {
                     }
                     return true
                 }
-                override fun onPageStarted(view: WebView, url: String, favicon: android.graphics.Bitmap?) { progress.visibility = View.VISIBLE; offline.visibility = View.GONE }
-                override fun onPageFinished(view: WebView, url: String) { progress.visibility = View.GONE; offline.visibility = View.GONE }
+                override fun onPageStarted(view: WebView, url: String, favicon: android.graphics.Bitmap?) { progress.setVisibility(View.VISIBLE); offline.setVisibility(View.GONE) }
+                override fun onPageFinished(view: WebView, url: String) { progress.setVisibility(View.GONE); offline.setVisibility(View.GONE) }
                 override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
-                    if (request.isForMainFrame) { progress.visibility = View.GONE; offline.visibility = View.VISIBLE }
+                    if (request.isForMainFrame) { progress.setVisibility(View.GONE); offline.setVisibility(View.VISIBLE) }
                 }
             }
             loadUrl(BuildConfig.WEB_APP_URL)
