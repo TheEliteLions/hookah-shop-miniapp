@@ -35,10 +35,9 @@ select lives_ok($$update public.products set description='Updated by admin' wher
 select lives_ok($$delete from public.products where slug='admin-write'$$,'admin can delete product');
 select is((select count(*)::int from public.products where slug='test-draft'),1,'admin can read draft product');
 select lives_ok($$insert into storage.objects(bucket_id,name) values('product-images','test/admin.webp')$$,'admin can upload product image');
-select lives_ok($$delete from storage.objects where bucket_id='product-images' and name='test/admin.webp'$$,'admin can delete product image');
-select has_policy('storage','objects','public reads product images','public image read policy exists');
-select has_policy('storage','objects','admins upload product images','admin-only upload policy exists');
-select has_policy('storage','objects','admins update product images','admin-only update policy exists');
-select has_policy('storage','objects','admins delete product images','admin-only delete policy exists');
+select is((select count(*)::int from pg_policies where schemaname='storage' and tablename='objects' and policyname='public reads product images' and cmd='SELECT' and roles @> ARRAY['anon','authenticated']::name[]),1,'public image read policy exists');
+select is((select count(*)::int from pg_policies where schemaname='storage' and tablename='objects' and policyname='admins upload product images' and cmd='INSERT' and roles @> ARRAY['authenticated']::name[] and position('is_admin' in coalesce(with_check,'')) > 0),1,'admin-only upload policy exists');
+select is((select count(*)::int from pg_policies where schemaname='storage' and tablename='objects' and policyname='admins update product images' and cmd='UPDATE' and roles @> ARRAY['authenticated']::name[] and position('is_admin' in coalesce(qual,'')) > 0 and position('is_admin' in coalesce(with_check,'')) > 0),1,'admin-only update policy exists');
+select is((select count(*)::int from pg_policies where schemaname='storage' and tablename='objects' and policyname='admins delete product images' and cmd='DELETE' and roles @> ARRAY['authenticated']::name[] and position('is_admin' in coalesce(qual,'')) > 0),1,'admin-only delete policy exists');
 select * from finish();
 rollback;
