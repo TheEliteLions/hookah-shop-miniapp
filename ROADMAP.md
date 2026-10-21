@@ -25,10 +25,10 @@
 - [x] Опубликовать исходный код в целевом GitHub repository; основной CI на `main` прошёл для коммита `7473bdf`.
 - [x] Опубликовать Cloudflare Pages production site и проверить Supabase catalog loading: https://nocturne-hookah-mvp.pages.dev.
 - [ ] Настроить Cloudflare Git integration или GitHub Actions secrets для дальнейшего автодеплоя; текущий deployment загружен прямым Wrangler CLI.
-- [ ] Собрать и скачать APK artifact после следующего push, когда отработает обновлённый Android workflow с production URL.
+- [x] Собрать Android debug APK artifact в GitHub Actions для коммита `4de3197`; workflow завершился успешно.
 - [x] Проверить desktop и mobile layout в локальном браузере; горизонтального overflow нет.
 - [ ] Проверить Android WebView на устройстве/эмуляторе.
-- [ ] Собрать Android APK artifact в GitHub Actions.
+- [x] Собрать Android APK artifact в GitHub Actions; установка и проверка на физическом устройстве ещё не выполнены.
 
 ## Проверочный журнал
 
@@ -39,9 +39,9 @@
 - Browser preview — checked desktop and 390 px mobile width; no horizontal overflow; no browser console errors.
 - SQL pgTAP — GitHub database workflow passed all 23 assertions for `f5ff9ea`. Previous failures exposed the nested data-modifying CTE, nonexistent `has_policy()`, Storage's guard against direct SQL DELETE, and the 24-versus-23 test-plan mismatch; each was corrected. Local Docker is unavailable.
 - Android APK — not built locally: Gradle command/wrapper is unavailable and local Android Studio runtime is JDK 25; the configured CI pins a compatible Java 17/Gradle 8.13 toolchain.
-- GitHub CI and database tests passed on `f5ff9ea`. Supabase CLI 2.121.0 is authenticated. Migration `202610210001` and the 10-row demo seed are applied to the confirmed project; Auth Site URL/redirects are configured and global signup is disabled.
+- GitHub CI, Supabase database tests, and Android APK workflow passed for commit `4de3197`. Supabase CLI 2.121.0 is authenticated. Migration `202610210001` and the 10-row demo seed are applied to the confirmed project; Auth Site URL/redirects are configured and global signup is disabled.
 - Cloudflare Pages is live at `https://nocturne-hookah-mvp.pages.dev`; deployment was a direct Wrangler upload, not Git-integrated. No custom SMTP is configured; default email delivery limits may prevent reliable confirmations/resets.
-- Android debug APK workflow is updated to build on push with the production URL; artifact status is pending the next commit's CI run.
+- Android debug APK artifact was uploaded successfully by workflow run `39591634637`; install and device-level WebView verification remain pending.
 
 ## Критерии приёмки
 
