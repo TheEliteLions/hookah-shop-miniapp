@@ -7,7 +7,7 @@
 - React + TypeScript + Vite.
 - Supabase Auth и PostgreSQL, миграции в `supabase/migrations/`.
 - Supabase Storage bucket `product-images` с публичным чтением и admin-only записью.
-- Исходный код опубликован в GitHub; основной GitHub Actions CI проходит. Cloudflare Pages и облачная база пока не настроены.
+- Исходный код опубликован в GitHub; основной GitHub Actions CI и Supabase tests проходят. Сайт развёрнут на Cloudflare Pages и подключён к Supabase.
 - Android Kotlin WebView wrapper и workflow для debug APK.
 
 Требуется Node.js 20.19+ или 22.12+ и npm. Скопируйте `.env.example` в `.env.local` и укажите Supabase project URL и publishable key. Пока параметры пусты, приложение открывает UI-заглушку вместо выдуманного локального каталога.
@@ -34,4 +34,4 @@ npm run build
 
 ## Текущий статус
 
-Исходный код опубликован в [GitHub](https://github.com/TheEliteLions/hookah-shop-miniapp); основной CI на `main` проходит. Облачная база Supabase ещё не настроена: проект ref проверен, удалённая история миграций и схема `public` пусты, Storage bucket отсутствует. `supabase db push --dry-run --linked` показывает только миграцию `202610210001_catalog_security.sql`; она не применялась. Database workflow выявил некорректные pgTAP assertions: вложенный data-modifying CTE, отсутствующую `has_policy()`, попытку прямого удаления объекта Storage через SQL и неверный план тестов (объявлено 24, фактически 23). Исправления включены; успешный workflow ещё не подтверждён. Локально Docker отсутствует. Cloudflare Pages и Android APK ещё не опубликованы. См. `ROADMAP.md` для статуса.
+Исходный код опубликован в [GitHub](https://github.com/TheEliteLions/hookah-shop-miniapp); основной CI и Supabase database tests проходят. Демонстрационный сайт опубликован на [Cloudflare Pages](https://nocturne-hookah-mvp.pages.dev). Supabase project `aehleysdsmgqjseghgmn` подключён: миграция `202610210001_catalog_security.sql` и 10 демонстрационных товаров применены, RLS/Storage policies проверены pgTAP (23 assertions). Auth настроен на production URL, email confirmation включён, signup отключён до privacy review. Администратор ещё не назначен; требуется владелец аккаунта и bootstrap по `docs/admin-bootstrap.md`. Checkout остаётся демонстрационным. Android debug APK собирается GitHub Actions на push, но запуск после последнего изменения ещё ожидает результата. Production Pages пока развёрнут прямой загрузкой Wrangler; Git-интеграция/автодеплой и SMTP не настроены. См. `ROADMAP.md` и `docs/deployment.md`.

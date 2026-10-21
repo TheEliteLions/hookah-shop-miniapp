@@ -14,16 +14,18 @@
 ## Требует выполнения/проверки
 
 - [x] Установить зависимости; typecheck, lint и production build завершились успешно.
-- [ ] Выполнить SQL tests в локальном Supabase/Docker. Supabase CLI 2.121.0 доступен через `npx`, но Docker отсутствует; GitHub database workflow завершился ошибкой.
+- [x] Выполнить SQL access tests в изолированном Supabase/Docker окружении GitHub Actions; локально Docker отсутствует.
 - [x] Добавить pgTAP доступ-тесты и GitHub Actions database workflow.
-- [ ] Подтвердить pgTAP исправление повторным GitHub workflow. Логи показали вложенный data-modifying CTE в `is()`, отсутствующую функцию `has_policy()`, защиту Storage от прямого SQL DELETE и расхождение плана (24 объявлено, 23 фактически). Тест изменён на проверку результатов и catalog policies, план установлен в 23; новый workflow ещё должен подтвердить его.
-- [ ] Применить миграции/seed к реальному или локальному Supabase и выполнить SQL access tests.
-- [x] Read-only preflight Supabase: ref `aehleysdsmgqjseghgmn` совпадает с проектом аккаунта `Project_hookah-shop`; remote migration history и таблицы `public` пусты, политики `public`/`storage` и Storage buckets отсутствуют.
+- [x] Подтвердить pgTAP исправление повторным GitHub workflow: 23 assertions прошли для коммита `f5ff9ea`.
+- [x] Применить проверенную миграцию и безопасный seed к пустому Supabase-проекту; проверка подтвердила 10 опубликованных демонстрационных товаров.
+- [x] Начальный read-only preflight подтвердил целевой ref `aehleysdsmgqjseghgmn` / `Project_hookah-shop` и пустую базу до миграции.
 - [x] Выполнить `supabase db push --dry-run --linked`: показана только `202610210001_catalog_security.sql`; никаких удалённых изменений не выполнялось.
-- [ ] Проверить реальные Auth redirect/confirmation настройки и назначить владельцем первого admin UUID.
+- [x] Настроить Supabase Auth Site URL и redirect allowlist на production/local origin; оставить email confirmation и выключить signup до privacy review.
+- [ ] Владелец создаёт собственный Auth account, затем назначает его admin по `docs/admin-bootstrap.md`; не выдавать admin публичной регистрации.
 - [x] Опубликовать исходный код в целевом GitHub repository; основной CI на `main` прошёл для коммита `7473bdf`.
-- [ ] Создать Cloudflare Pages deployment, проверить HTTPS URL и production env.
-- [ ] Передать production URL в `WEB_APP_URL`, собрать и скачать APK artifact.
+- [x] Опубликовать Cloudflare Pages production site и проверить Supabase catalog loading: https://nocturne-hookah-mvp.pages.dev.
+- [ ] Настроить Cloudflare Git integration или GitHub Actions secrets для дальнейшего автодеплоя; текущий deployment загружен прямым Wrangler CLI.
+- [ ] Собрать и скачать APK artifact после следующего push, когда отработает обновлённый Android workflow с production URL.
 - [x] Проверить desktop и mobile layout в локальном браузере; горизонтального overflow нет.
 - [ ] Проверить Android WebView на устройстве/эмуляторе.
 - [ ] Собрать Android APK artifact в GitHub Actions.
@@ -35,10 +37,11 @@
 - `npm run lint` — passed.
 - `npm run build` — passed (Vite production bundle).
 - Browser preview — checked desktop and 390 px mobile width; no horizontal overflow; no browser console errors.
-- SQL pgTAP — GitHub database workflow failed at `supabase test db` for commits `7473bdf`, `0e895f3`, `24e66d1`, `d02e3e8`, and `760eb7a`. Logs identified a nested data-modifying CTE, nonexistent `has_policy()`, Storage's guard against direct SQL DELETE, and a 24-versus-23 test-plan mismatch. Assertions and plan were corrected and await another workflow result. Not run locally because Docker is unavailable. No pass is claimed.
+- SQL pgTAP — GitHub database workflow passed all 23 assertions for `f5ff9ea`. Previous failures exposed the nested data-modifying CTE, nonexistent `has_policy()`, Storage's guard against direct SQL DELETE, and the 24-versus-23 test-plan mismatch; each was corrected. Local Docker is unavailable.
 - Android APK — not built locally: Gradle command/wrapper is unavailable and local Android Studio runtime is JDK 25; the configured CI pins a compatible Java 17/Gradle 8.13 toolchain.
-- GitHub CI — passed for `7473bdf` and documentation commit `0e895f3`; Supabase database tests — failed for both commits. Supabase CLI 2.121.0 is authenticated. Read-only preflight found an empty app schema and a dry-run with one pending migration; the migration was not applied.
-- Supabase database and Cloudflare production deployment — not configured or deployed.
+- GitHub CI and database tests passed on `f5ff9ea`. Supabase CLI 2.121.0 is authenticated. Migration `202610210001` and the 10-row demo seed are applied to the confirmed project; Auth Site URL/redirects are configured and global signup is disabled.
+- Cloudflare Pages is live at `https://nocturne-hookah-mvp.pages.dev`; deployment was a direct Wrangler upload, not Git-integrated. No custom SMTP is configured; default email delivery limits may prevent reliable confirmations/resets.
+- Android debug APK workflow is updated to build on push with the production URL; artifact status is pending the next commit's CI run.
 
 ## Критерии приёмки
 
